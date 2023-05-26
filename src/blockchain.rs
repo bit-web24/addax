@@ -1,13 +1,52 @@
-// src/blockchain.rs
+use serde::{Deserialize, Serialize};
+// use serde_json;
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Block {
-    // Define the structure of a block
+    pub index: u64,
+    pub timestamp: u64,
+    pub data: String,
+    pub previous_hash: String,
+    pub hash: String,
+}
+
+impl Block {
+    pub fn new(
+        index: u64,
+        timestamp: u64,
+        data: String,
+        previous_hash: String,
+        hash: String,
+    ) -> Self {
+        Block {
+            index,
+            timestamp,
+            data,
+            previous_hash,
+            hash,
+        }
+    }
 }
 
 pub struct Blockchain {
-    // Define the structure of the blockchain
+    pub blocks: Vec<Block>,
 }
 
 impl Blockchain {
-    // Implement functions for adding blocks, validating transactions, etc.
+    pub fn new() -> Self {
+        let genesis_block = Block::new(
+            0,
+            0,
+            String::from("Genesis Block"),
+            String::from(""),
+            String::from("genesis_hash"),
+        );
+        Blockchain {
+            blocks: vec![genesis_block],
+        }
+    }
+
+    pub fn add_block(&mut self, block: Block) {
+        self.blocks.push(block);
+    }
 }

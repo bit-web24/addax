@@ -1,5 +1,3 @@
-// src/networking.rs
-
 pub struct Networking {
     // Define the structure and behavior of the networking component
 }
