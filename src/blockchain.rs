@@ -1,11 +1,13 @@
+use crate::transaction::Transaction;
 use serde::{Deserialize, Serialize};
-// use serde_json;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Block {
     pub index: u64,
+    pub nonce: u64,
+    pub coinbase: f64,
     pub timestamp: u64,
-    pub data: String,
+    pub data: Vec<Transaction>,
     pub previous_hash: String,
     pub hash: String,
 }
@@ -13,13 +15,17 @@ pub struct Block {
 impl Block {
     pub fn new(
         index: u64,
+        nonce: u64,
+        coinbase: f64,
         timestamp: u64,
-        data: String,
+        data: Vec<Transaction>,
         previous_hash: String,
         hash: String,
     ) -> Self {
         Block {
             index,
+            nonce,
+            coinbase,
             timestamp,
             data,
             previous_hash,
@@ -37,7 +43,16 @@ impl Blockchain {
         let genesis_block = Block::new(
             0,
             0,
-            String::from("Genesis Block"),
+            1000.0,
+            0,
+            vec![Transaction {
+                sender: String::from("Genesis"),
+                receiver: String::from("Genesis"),
+                amount: 0.0,
+                transaction_id: String::from("Genesis"),
+                timestamp: 0,
+                additional_data: String::from("Genesis"),
+            }],
             String::from(""),
             String::from("genesis_hash"),
         );
