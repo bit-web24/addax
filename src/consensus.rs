@@ -22,15 +22,15 @@ impl ConsensusAlgorithm {
     }
 
     fn calculate_hash(block: &Block, nonce: u64) -> String {
-        let data = format!(
-            "{}{}{}{}{}{}",
-            block.index,
-            block.coinbase,
-            block.timestamp,
-            serde_json::to_string(&block.data).unwrap(),
-            block.previous_hash,
-            nonce
-        );
+        let data = serde_json::json!({
+            "index": block.index,
+            "coinbase": block.coinbase,
+            "timestamp": block.timestamp,
+            "data": serde_json::to_string(&block.data).unwrap(),
+            "previous_hash": block.previous_hash,
+            "nonce": nonce
+        });
+        let data = serde_json::to_string(&data).unwrap();
 
         let mut hasher = Sha256::new();
         hasher.update(data);
