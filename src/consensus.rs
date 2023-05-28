@@ -21,14 +21,14 @@ impl ConsensusAlgorithm {
         }
     }
 
-    fn calculate_hash(block: &Block, nonce: u64) -> String {
+    pub fn calculate_hash(block: &Block, nonce: u64) -> String {
         let data = serde_json::json!({
             "index": block.index,
+            "nonce": nonce,
             "coinbase": block.coinbase,
             "timestamp": block.timestamp,
-            "data": serde_json::to_string(&block.data).unwrap(),
-            "previous_hash": block.previous_hash,
-            "nonce": nonce
+            "ledger": serde_json::to_string(&block.ledger).unwrap(),
+            "previous_hash": block.hash_,
         });
         let data = serde_json::to_string(&data).unwrap();
 
