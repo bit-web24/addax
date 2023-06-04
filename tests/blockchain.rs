@@ -40,7 +40,15 @@ mod tests {
         // Verify that the latest block's previous_hash matches the hash of the previous block
         let previous_block = &blockchain.blocks[0];
         let previous_block_hash =
-            ConsensusAlgorithm::calculate_hash(previous_block, previous_block.nonce);
+            ConsensusAlgorithm::calculate_hash(
+                previous_block.index,
+                previous_block.nonce,
+                previous_block.coinbase,
+                previous_block.timestamp,
+                previous_block.ledger,
+                previous_block.hash_,
+            );
+
         assert_eq!(latest_block.hash_, previous_block_hash);
     }
 }

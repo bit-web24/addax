@@ -1,41 +1,10 @@
 use crate::consensus::ConsensusAlgorithm;
 use crate::transaction::Transaction;
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Block {
-    pub index: u64,
-    pub nonce: u64,
-    pub coinbase: f64,
-    pub timestamp: DateTime<Utc>,
-    pub ledger: Vec<Transaction>,
-    pub hash_: String,
-    pub hash: String,
-}
-
-impl Block {
-    pub fn new(
-        index: u64,
-        nonce: u64,
-        coinbase: f64,
-        timestamp: DateTime<Utc>,
-        ledger: Vec<Transaction>,
-        hash_: String,
-        hash: String,
-    ) -> Self {
-        Block {
-            index,
-            nonce,
-            coinbase,
-            timestamp,
-            ledger,
-            hash_,
-            hash,
-        }
-    }
-}
+pub mod block;
+use block::Block;
 
 pub struct Blockchain {
     pub _id: String,
@@ -56,17 +25,7 @@ impl Blockchain {
             String::from("Genesis"),
         );
 
-        let mut genesis_block = Block {
-            index: 0,
-            nonce: 1,
-            coinbase: 1000.0,
-            timestamp: timestamp,
-            ledger: vec![genesis_transaction],
-            hash_: String::from(""),
-            hash: String::from("genesis_hash"),
-        };
-
-        ConsensusAlgorithm::mine_block(&mut genesis_block);
+        let mut genesis_block = Block::new(0, 1000.0, vec![genesis_transaction], String::from(""));
 
         let _id_json = serde_json::to_string(&serde_json::json!({
             "name": name,
@@ -96,7 +55,13 @@ impl Blockchain {
         let mut prev_hash = String::from("");
 
         for block in &self.blocks {
-            let calculated_hash = ConsensusAlgorithm::calculate_hash(&block, block.nonce);
+            let calculated_hash = ConsensusAlgorithm::mine_block(
+                block.index,
+                block.coinbase,
+                &block.ledger,
+                &block.hash_,
+            )
+            .hash;
 
             if block.hash_ != prev_hash {
                 return false;
