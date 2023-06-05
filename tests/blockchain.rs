@@ -3,18 +3,14 @@ mod tests {
     use addax::ConsensusAlgorithm;
     use addax::Transaction;
     use addax::{Block, Blockchain};
-    use chrono::Utc;
 
     #[test]
     fn test_add_block() {
         let mut blockchain = Blockchain::new("1st", "1.0.0");
-        let timestamp = Utc::now();
 
         let block = Block::new(
             1,
-            1234567890,
-            500.0,
-            timestamp,
+            16.26,
             vec![Transaction::new(
                 String::from("Alice"),
                 String::from("Bob"),
@@ -22,7 +18,6 @@ mod tests {
                 String::from("signature"),
             )],
             blockchain.get_latest_block().unwrap().hash.clone(),
-            String::from("block_hash"),
         );
 
         // Add the block to the blockchain
@@ -39,15 +34,14 @@ mod tests {
 
         // Verify that the latest block's previous_hash matches the hash of the previous block
         let previous_block = &blockchain.blocks[0];
-        let previous_block_hash =
-            ConsensusAlgorithm::calculate_hash(
-                previous_block.index,
-                previous_block.nonce,
-                previous_block.coinbase,
-                previous_block.timestamp,
-                previous_block.ledger,
-                previous_block.hash_,
-            );
+        let previous_block_hash = ConsensusAlgorithm::calculate_hash(
+            previous_block.index,
+            previous_block.nonce,
+            previous_block.coinbase,
+            previous_block.timestamp,
+            &previous_block.ledger,
+            &previous_block.hash_,
+        );
 
         assert_eq!(latest_block.hash_, previous_block_hash);
     }

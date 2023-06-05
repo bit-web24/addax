@@ -25,7 +25,7 @@ impl Blockchain {
             String::from("Genesis"),
         );
 
-        let mut genesis_block = Block::new(0, 1000.0, vec![genesis_transaction], String::from(""));
+        let genesis_block = Block::new(0, 1000.0, vec![genesis_transaction], String::from(""));
 
         let _id_json = serde_json::to_string(&serde_json::json!({
             "name": name,
